@@ -1,0 +1,32 @@
+﻿@model proyecto.Models.Administrador
+@{
+    ViewBag.Title = "RegistracionAdmin";
+}
+
+<h2>RegistracionAdmin</h2>
+<div class="jumbotron">
+    @using (Html.BeginForm("RegistracionAdmin", "RegistracionAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.Label("Nombre:")
+        @Html.TextBoxFor(x => x.Nombre)
+        @Html.ValidationMessageFor(x => x.Nombre)<br />
+
+
+        @Html.Label("Email:")
+        @Html.EditorFor(x => x.Email)
+        @Html.ValidationMessageFor(x => x.Email)<br />
+
+        @Html.Label("Contraseña:")
+        @Html.TextBoxFor(x => x.Contraseña, new { type = "password" })
+        @Html.ValidationMessageFor(x => x.Contraseña)<br />
+
+        @Html.Label("Imagen (opcional):")
+        @Html.TextBoxFor(x => x.Imagen, new { type = "file" })
+        @Html.ValidationMessageFor(x => x.Imagen)<br />
+        <input type="submit" value="Enviar" />
+    }
+</div>
+
+

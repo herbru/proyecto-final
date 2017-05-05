@@ -11,24 +11,31 @@ namespace PaginaProyecto.Models
     {
         public int UsuarioID { get; set; }
 
-        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$", ErrorMessage = "Este campo solo puede contener letras, guiones o espacios")]
-        [Required(ErrorMessage = "El campo no puede estar vacio")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [StringLength(60, ErrorMessage = "El nombre debe tener menos de 60 caracteres")]
+        [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 
-        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$", ErrorMessage = "Este campo solo puede contener letras, guiones o espacios")]
-        [Required(ErrorMessage = "Este campo no puede estar vacio")]
-        [StringLength(60, ErrorMessage = "El apellid debe tener menos de 60 caracteres")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio")]
+        [StringLength(60, ErrorMessage = "El apellido debe tener menos de 60 caracteres")]
+        [Display(Name ="Apellido")]
         public string Apellido { get; set; }
 
-        [Required(ErrorMessage = "El campo no puede estar vacio")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio")]
+        [Display(Name = "Email")]
         [EmailAddress(ErrorMessage = "Direccion de Email invalida")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "El campo no puede estar vacio")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio")]
+        [Display(Name = "Contraseña")]
         [StringLength(40, MinimumLength = 8, ErrorMessage = "La contraseña debe tener un minimo de 8 caracteres y un maximo de 40")]
-        [DataType(DataType.Password, ErrorMessage = "Debe ingresar una contraseña")]
+        [DataType(DataType.Password)]
         public string Contraseña { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirmar contraseña")]
+        [Compare("Contraseña", ErrorMessage = "La contraseña y la confirmacion no son iguales")]
+        public string ConfirmarContraseña{ get; set; }
 
         public HttpPostedFileBase Imagen { get; set; }
 

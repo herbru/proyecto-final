@@ -16,6 +16,5 @@ namespace PaginaProyecto.DAL
             Database.SetInitializer<PaginaContext>(new DropCreateDatabaseIfModelChanges<PaginaContext>());
         }
         public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Administrador> Adminstradores { get; set; }
       }    
 }

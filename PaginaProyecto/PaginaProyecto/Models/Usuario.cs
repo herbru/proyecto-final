@@ -28,7 +28,7 @@ namespace PaginaProyecto.Models
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [Display(Name = "Contraseña")]
-        [StringLength(40, MinimumLength = 8, ErrorMessage = "La contraseña debe tener un minimo de 8 caracteres y un maximo de 40")]
+        [StringLength(40, MinimumLength = 8, ErrorMessage = "La contraseña debe tener un minimo de 8 caracteres")]
         [DataType(DataType.Password)]
         public string Contraseña { get; set; }
 

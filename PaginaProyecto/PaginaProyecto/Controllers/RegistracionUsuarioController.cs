@@ -22,8 +22,7 @@ namespace PaginaProyecto.Controllers
         {
             if (ModelState.IsValid)
             {
-                oUsuario.InsertarUsuario();
-                return View("HomeUsuario");
+                return RedirectToAction("LoguearUsuario");
             }
             else
             {
@@ -31,10 +30,9 @@ namespace PaginaProyecto.Controllers
             }
         }
 
-        public ActionResult LoguearUsuario(Usuario oUsuario)
+        public ActionResult LoguearUsuario()
         {
-            oUsuario.LoguearUsuario();
-            return View("HomeUsuario");
+            return View();
         }
     }
 }

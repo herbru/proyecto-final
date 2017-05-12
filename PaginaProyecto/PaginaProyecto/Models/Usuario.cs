@@ -113,6 +113,10 @@ namespace PaginaProyecto.Models
                         retUsuario.Email = dr["Email"].ToString();
                         retUsuario.Contraseña = dr["Contraseña"].ToString();
                     }
+                    else
+                    {
+                        return retUsuario;
+                    }
             }
             catch (Exception ex2)
             {

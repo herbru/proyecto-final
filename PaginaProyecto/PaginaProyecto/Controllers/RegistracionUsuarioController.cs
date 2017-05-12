@@ -40,20 +40,26 @@ namespace PaginaProyecto.Controllers
         // POST : RegistracionUsuario/LoguearUsuario
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LoguearUsuario(Usuario oUsuario)
+        public ActionResult LoguearUsuario(Usuario objUsuario)
         {
-            Usuario objUsuario = new Usuario();
-            objUsuario = oUsuario.LoguearUsuario(oUsuario);
+            Usuario oUsuario = new Usuario();
+            oUsuario = oUsuario.LoguearUsuario(objUsuario);
             if (objUsuario.Email == oUsuario.Email && oUsuario.Contraseña == objUsuario.Contraseña)
             {
-                ViewBag.UsuarioLogueado = objUsuario;
+                ViewBag.UsuarioLogueado = oUsuario;
                 return RedirectToAction("HomeUsuario");
             }
             else
             {
-                ViewBag.MensajeErrorLogueo = "El usuario o la contraseña no son correctos";
+                ViewBag.MensajeError = "El usuario o la contraseña no son correctos";
                 return View();
             }
+        }
+
+        // GET : /RegistracionUsuario/HomeUsuario
+        public ActionResult HomeUsuario()
+        {
+            return View();
         }
     }
 }

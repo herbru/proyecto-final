@@ -5,6 +5,7 @@ using System.Web;
 using System.Data;
 using MySql.Data.MySqlClient;
 using System.ComponentModel.DataAnnotations;
+using System.Data.OleDb;
 
 namespace PaginaProyecto.Models
 {
@@ -44,7 +45,16 @@ namespace PaginaProyecto.Models
         [Compare("Contraseña", ErrorMessage = "La contraseña y la confirmacion no son iguales")]
         public string ConfirmarContraseña { get; set; }
 
-        public HttpPostedFileBase Imagen { get; set; }
+        private OleDbCommand Consulta;
+        private OleDbConnection Conexion;
+        private void Abrirconexion()
+        {
+            string Proveedor = "Provider=Microsoft.Jet.OLEDB.4.0; Data Source=|DataDirectory|DbProyecto.mdb";
+            Conexion = new OleDbConnection();
+            Conexion.ConnectionString = Proveedor;
+            Conexion.Open();
+            Consulta = Conexion.CreateCommand();
+        }
 
         //metodos publicos
 
@@ -52,41 +62,30 @@ namespace PaginaProyecto.Models
         public void InsertarUsuario()
         {
             //abro conexion y declaro una transaccion
-            Conexiondb.Open();
-            MySqlTransaction transaccion = Conexiondb.BeginTransaction();
+            Abrirconexion();
             try
             {
                 // asigno el nombre de la consulta a el nombre de consulta que tengo guardado en la DB
-                MySqlCommand Comando = new MySqlCommand("InsertarUsuario", Conexiondb, transaccion);
-                Comando.CommandType = CommandType.StoredProcedure;
-
-                //agrego los parametros
-                Comando.Parameters.AddWithValue("PNombre", this.Nombre);
-                Comando.Parameters.AddWithValue("PApellido", this.Apellido);
-                Comando.Parameters.AddWithValue("PEmail", this.Email);
-                Comando.Parameters.AddWithValue("PContrasena", this.Contraseña);
+                Consulta.CommandType = CommandType.StoredProcedure;
+                Consulta.CommandText = "InsertarUsuario";
+                //Agrego los parametros
+                Consulta.Parameters.Add(new OleDbParameter("pNombre", this.Nombre));
+                Consulta.Parameters.Add(new OleDbParameter("pEmail", this.Email));
+                Consulta.Parameters.Add(new OleDbParameter("pApellido",this.Apellido));
+                Consulta.Parameters.Add(new OleDbParameter("pContraseña",this.Contraseña));
 
                 //ejecuto la consulta que no devuelve nada
-                Comando.ExecuteNonQuery();
-                transaccion.Commit();
+                Consulta.ExecuteNonQuery();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                try
-                {
-                    //pruebo la ejecucion de la consulta otra vez
-                    transaccion.Rollback();
-                }
-                catch (Exception ex2)
-                {
-                    //este bloque de codigo va a manejar cualquier error que pudieran 
-                    //ocurrir en el servidor que pudieran causar la falla del reintento,
-                    //como por ejemplo una conexion cerrada.
-                    Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
-                    Console.WriteLine("  Message: {0}", ex2.Message);
-                }
+                  //este bloque de codigo va a manejar cualquier error que pudiera 
+                  //ocurrir en el servidor que pudieran causar la falla del reintento,
+                  //como por ejemplo una conexion cerrada.
+                  Console.WriteLine("Exception Type: {0}", ex.GetType());
+                  Console.WriteLine("  Message: {0}", ex.Message);
             }
-            Conexiondb.Close();
+            Conexion.Close();
         }
 
         //devuelve un Usuario si el mail y la contraseña(parametros) coinciden con un mail y una contraseña de un registro en la DB
@@ -94,41 +93,29 @@ namespace PaginaProyecto.Models
         {
             Usuario retUsuario = new Usuario();
             //abro conexion y declaro una transaccion
-            Conexiondb.Open();
-            MySqlTransaction transaccion = Conexiondb.BeginTransaction();
+            Abrirconexion();
             try
             {
-                // asigno el nombre de la consulta a el nombre de consulta que tengo guardado en la DB
-                MySqlCommand Comando = new MySqlCommand("LoguearUsuario", Conexiondb, transaccion);
-                Comando.CommandType = CommandType.StoredProcedure;
-
-                //agrego los parametros
-                Comando.Parameters.AddWithValue("PEmail", oUsuario.Email);
-                Comando.Parameters.AddWithValue("PContrasena", oUsuario.Contraseña);
+                // asigno el nombre de la consulta a el nombre de consulta que tengo guardado en la DBConsulta.CommandType = CommandType.StoredProcedure;
+                Consulta.CommandType = CommandType.StoredProcedure;
+                Consulta.CommandText = "LoguearUsuario";
+                //Agrego los parametros
+                Consulta.Parameters.Add(new OleDbParameter("pEmail", oUsuario.Email));
+                Consulta.Parameters.Add(new OleDbParameter("pContraseña", oUsuario.Contraseña));
 
                 //ejecuto la consulta y obtengo un iterable con registros
-                MySqlDataReader dr = Comando.ExecuteReader();
-                transaccion.Commit();
-
-                while (dr.Read())
-                {
-                    if (oUsuario.Email == dr["Email"].ToString() && oUsuario.Contraseña == dr["Contrasena"].ToString())
+                OleDbDataReader dr = Consulta.ExecuteReader();
+                    if (dr.HasRows)
                     {
+                        dr.Read();
                         retUsuario.Nombre = dr["Nombre"].ToString();
                         retUsuario.Apellido = dr["Apellido"].ToString();
                         retUsuario.Email = dr["Email"].ToString();
-                        retUsuario.Contraseña = dr["Contrasena"].ToString();
+                        retUsuario.Contraseña = dr["Contraseña"].ToString();
                     }
-                }
             }
-            catch (Exception)
+            catch (Exception ex2)
             {
-                try
-                {
-                    //pruebo la ejecucion de la consulta otra vez
-                    transaccion.Rollback();
-                }
-                catch (Exception ex2)
                 {
                     //este bloque de codigo va a manejar cualquier error que pudieran 
                     //ocurrir en el servidor que pudieran causar la falla del reintento,
@@ -137,7 +124,7 @@ namespace PaginaProyecto.Models
                     Console.WriteLine("  Message: {0}", ex2.Message);
                 }
             }
-            Conexiondb.Close();
+            Conexion.Close();
             return retUsuario;
         }
     }

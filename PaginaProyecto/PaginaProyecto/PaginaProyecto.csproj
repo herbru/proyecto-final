@@ -77,6 +77,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -197,6 +198,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HomeUserController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RegistracionUsuarioController.cs" />
     <Compile Include="DAL\PaginaContext.cs" />
@@ -346,7 +348,7 @@
     <Content Include="Views\Shared\_MiLayout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\RegistracionUsuario\RegistrarUsuario.cshtml" />
-    <Content Include="Views\RegistracionUsuario\Exito.cshtml" />
+    <Content Include="Views\HomeUser\HomeUsuario.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

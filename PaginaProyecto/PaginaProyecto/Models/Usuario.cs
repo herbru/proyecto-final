@@ -12,7 +12,8 @@ namespace PaginaProyecto.Models
     {
         //declaro conexion
 
-        private MySqlConnection Conexiondb = new MySqlConnection("server=localhost; Uid=root; Password=Proyecto; Database=dbProyecto; Port=3306");
+        private MySqlConnection Conexiondb = new MySqlConnection("server=localhost; Uid=root; Password=Proyecto; Database=proyectodb; Port=3306");
+        
 
         //propiedades de la clase
         public int UsuarioID { get; set; }
@@ -89,8 +90,9 @@ namespace PaginaProyecto.Models
         }
 
         //devuelve un Usuario si el mail y la contraseña(parametros) coinciden con un mail y una contraseña de un registro en la DB
-        public void LoguearUsuario()
+        public Usuario LoguearUsuario(Usuario oUsuario)
         {
+            Usuario retUsuario = new Usuario();
             //abro conexion y declaro una transaccion
             Conexiondb.Open();
             MySqlTransaction transaccion = Conexiondb.BeginTransaction();
@@ -101,8 +103,8 @@ namespace PaginaProyecto.Models
                 Comando.CommandType = CommandType.StoredProcedure;
 
                 //agrego los parametros
-                Comando.Parameters.AddWithValue("PEmail", this.Email);
-                Comando.Parameters.AddWithValue("PContrasena", this.Contraseña);
+                Comando.Parameters.AddWithValue("PEmail", oUsuario.Email);
+                Comando.Parameters.AddWithValue("PContrasena", oUsuario.Contraseña);
 
                 //ejecuto la consulta y obtengo un iterable con registros
                 MySqlDataReader dr = Comando.ExecuteReader();
@@ -110,12 +112,12 @@ namespace PaginaProyecto.Models
 
                 while (dr.Read())
                 {
-                    if (Email == dr["Email"].ToString() && Contraseña == dr["Contrasena"].ToString())
+                    if (oUsuario.Email == dr["Email"].ToString() && oUsuario.Contraseña == dr["Contrasena"].ToString())
                     {
-                        this.Nombre = dr["Nombre"].ToString();
-                        this.Apellido = dr["Apellido"].ToString();
-                        this.Email = dr["Email"].ToString();
-                        this.Contraseña = dr["Contrasena"].ToString();
+                        retUsuario.Nombre = dr["Nombre"].ToString();
+                        retUsuario.Apellido = dr["Apellido"].ToString();
+                        retUsuario.Email = dr["Email"].ToString();
+                        retUsuario.Contraseña = dr["Contrasena"].ToString();
                     }
                 }
             }
@@ -136,6 +138,7 @@ namespace PaginaProyecto.Models
                 }
             }
             Conexiondb.Close();
+            return retUsuario;
         }
     }
 }

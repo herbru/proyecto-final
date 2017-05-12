@@ -278,9 +278,7 @@ header .intro-text .intro-heading {
     margin-bottom: 50px;
   }
 }
-section {
-  padding: 100px 0;
-}
+section {}
 section h2.section-heading {
   font-size: 40px;
   margin-top: 0;

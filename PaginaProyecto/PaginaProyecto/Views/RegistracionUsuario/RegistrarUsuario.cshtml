@@ -1,15 +1,19 @@
 ﻿@model PaginaProyecto.Models.Usuario
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Registracion";
+    Layout = "~/Views/Shared/_MiLayout.cshtml";
 }
-
-<h2>Registracion de Usuarios</h2>
-
-@using (Html.BeginForm("RegistrarUsuario", "RegistracionUsuario", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+<div class="row">
+    <div class="col-sm-12 col-md-0">
+        <br><br><br><br>
+    </div>
+</div>
+<h4>Crear una cuenta nueva</h4>
+<hr />
+@using (Html.BeginForm("RegistrarUsuario", "RegistracionUsuario", FormMethod.Post, new { @class = "form-horizontal Container", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h4>Crear una cuenta nueva</h4>
-    <hr />
+    
     @Html.ValidationSummary("", new { @class = "text-danger" })
     <div class="form-group">
         @Html.LabelFor(x => x.Nombre, new { @class = "col-md-2 control-label" })
@@ -47,7 +51,7 @@
         </div>
     </div>
 }
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    
 }
